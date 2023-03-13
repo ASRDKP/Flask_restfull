@@ -29,7 +29,15 @@ class RegisterList(Resource):
 class Register(Resource):
     def get(self, Register_id):
         return register[Register_id]
-        
+    
+    
+    def post(self, Register_id):
+        if Register_id in register:
+            abort(409, "Member with this id already exists, please change its id")
+        register[Register_id] = {'name' : request.json['name'], 'lname' : request.json['lname']}
+        return redirect("/RegisterList")
+
+    
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
 api.add_resource(RegisterList,"/RegisterList")
