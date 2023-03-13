@@ -36,7 +36,15 @@ class Register(Resource):
             abort(409, "Member with this id already exists, please change its id")
         register[Register_id] = {'name' : request.json['name'], 'lname' : request.json['lname']}
         return redirect("/RegisterList")
+    
+    def put(self, Register_id):
+        if Register_id in register:
+            print("Member with this id does not exists, please give proper id")
+        register[Register_id] = {'name' : request.json['name'], 'lname' : request.json['lname']}
+        return redirect("/RegisterList")
 
+
+            
     
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
