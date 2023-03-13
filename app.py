@@ -43,7 +43,11 @@ class Register(Resource):
         register[Register_id] = {'name' : request.json['name'], 'lname' : request.json['lname']}
         return redirect("/RegisterList")
 
-
+    def delete(self, Register_id):
+        if Register_id in register:
+            print("Member with this id does not exists, please give proper id")
+        del register[Register_id]
+        return redirect("/RegisterList")
             
     
 api.add_resource(HelloWorld,"/")
