@@ -26,10 +26,14 @@ class RegisterList(Resource):
         return register
 
 
-    
+class Register(Resource):
+    def get(self, Register_id):
+        return register[Register_id]
+        
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
 api.add_resource(RegisterList,"/RegisterList")
+api.add_resource(Register,"/Register/<int:Register_id>")
 
 if __name__ == '__main__':
     app.run(debug=True)
