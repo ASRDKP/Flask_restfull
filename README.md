@@ -1,0 +1,1 @@
+This Flask application is a task that is for learning purpose of the flask_restfull features.
