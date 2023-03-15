@@ -149,7 +149,26 @@ class GetDataFromModelbyID(Resource):
             }
             print("Error :" , e)
             return df
-        
+    
+    def patch(self, Register_id):
+        try:
+            udata = register.query.get_or_404(Register_id)
+            if udata is None:
+                return ("No Data With the given Register_id = {}. Please Enter valid Register_id").format(Register_id)
+            if 'name' in request.json:
+                udata.name = request.json['name']
+            if 'lname' in request.json:
+                udata.lname = request.json['lname']
+            db.session.commit()
+            return "Id is Successfully Updated."
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromModelbyID.patch",
+                "Error_Message" : e
+            }
+            print("Error :" , e)
+            return df
+
 
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
