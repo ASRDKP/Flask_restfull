@@ -133,6 +133,23 @@ class GetDataFromModelbyID(Resource):
             print("Error :" , e)
             return df
 
+    def put(self, Register_id):
+        try:
+            udata = register.query.get_or_404(Register_id)
+            if udata is None:
+                return ("No Data With the given Register_id = {}. Please Enter valid Register_id").format(Register_id)
+            udata.name = request.json['name']
+            udata.lname = request.json['lname']
+            db.session.commit()
+            return "Id is Successfully Updated."
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromModelbyID.put",
+                "Error_Message" : e
+            }
+            print("Error :" , e)
+            return df
+        
 
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
