@@ -118,7 +118,21 @@ class GetDataFromModelbyID(Resource):
             return df
     
    
-   
+    def post(self, Register_id):
+        try:
+            print("Data", request.json)
+            udata = register(id = Register_id, name = request.json['name'], lname = request.json['lname'])
+            db.session.add(udata)
+            db.session.commit()
+            return register.serialize(register.query.filter_by(id=Register_id).first_or_404(description='Record with id={} is not available'.format(Register_id)))
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromModelbyID.POST ",
+                "Error_Message" : e.args[0]
+            }
+            print("Error :" , e)
+            return df
+
 
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
