@@ -133,6 +133,7 @@ class GetDataFromModelbyID(Resource):
             print("Error :" , e)
             return df
 
+    
     def put(self, Register_id):
         try:
             udata = register.query.get_or_404(Register_id)
@@ -150,6 +151,7 @@ class GetDataFromModelbyID(Resource):
             print("Error :" , e)
             return df
     
+    
     def patch(self, Register_id):
         try:
             udata = register.query.get_or_404(Register_id)
@@ -164,6 +166,23 @@ class GetDataFromModelbyID(Resource):
         except Exception as e:
             df = {
                 "Error" : "Something went Worng in GetDataFromModelbyID.patch",
+                "Error_Message" : e
+            }
+            print("Error :" , e)
+            return df
+
+    
+    def delete(self, Register_id):
+        try :
+            udata = register.query.get(Register_id)
+            if udata is None:
+                return ("No Data With the given Register_id = {}. Please Enter valid Register_id").format(Register_id)
+            db.session.delete(udata)
+            db.session.commit()
+            return "Deleted Successfully."
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromModelbyID.delete",
                 "Error_Message" : e
             }
             print("Error :" , e)
