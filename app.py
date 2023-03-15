@@ -103,12 +103,29 @@ class GetDataFromModel(Resource):
         
 
 
+class GetDataFromModelbyID(Resource):
+    def get(self,Register_id):
+        try :
+            filter = register.query.filter_by(id=Register_id)
+            desc = 'Record with id={} is not available'.format(Register_id)
+            return register.serialize(filter.first_or_404(description = desc))
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromModelbyID.get",
+                "Error_Message" : e
+            }
+            print("Error :" , e)
+            return df
+    
+   
+   
 
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
 api.add_resource(RegisterList,"/RegisterList")
 api.add_resource(Register,"/Register/<int:Register_id>")
 api.add_resource(GetDataFromModel, "/GetDataFromModel/all")
+api.add_resource(GetDataFromModelbyID, "/GetDataFromModelbyID/<int:Register_id>")
 
 
 if __name__ == '__main__':
