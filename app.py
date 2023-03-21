@@ -2,16 +2,20 @@ from flask import Flask, redirect, request, jsonify
 from flask_restful import Api, Resource,reqparse, abort
 from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 api = Api(app)
 
 
+
 app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:root1234@localhost:3306/newhospitaldb'
 # app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
-db.init_app(app)
+
+
 
 # register = {
 #     1 : {'name' : 'Rahul', 'lname' : 'Prajapat'},
@@ -34,12 +38,29 @@ class register(db.Model):
 with app.app_context():
     db.create_all()
 
+
+
+class registerSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = register
+        
+    id = ma.auto_field()
+    name = ma.auto_field()
+    lname = ma.auto_field()
+
+
+
+
+
+
+
+
 class RegisterModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     lname = db.Column(db.String(100))
     
-db.create_all()
+# db.create_all()
 
 class HelloWorld(Resource):
     def get (self):
@@ -189,12 +210,38 @@ class GetDataFromModelbyID(Resource):
             return df
 
 
+
+class GetDataFromSchema(Resource):
+    def get(self):
+        try:
+            data = register.query.all()
+            print(data)
+            registers_schema = registerSchema(many=True)
+            udata = registers_schema.dumps(data)
+            print("UData :" , udata)
+            print("Type :", type(udata))
+            data = json.loads(udata)
+            print("Type :", type(data))
+            return data
+            # return registers_schema.dumps(data)
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromSchema.getall",
+                "Error_Message" : e
+            }
+            print("Error :" , e)
+            return df
+
+        
+        
+        
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
 api.add_resource(RegisterList,"/RegisterList")
 api.add_resource(Register,"/Register/<int:Register_id>")
 api.add_resource(GetDataFromModel, "/GetDataFromModel/all")
 api.add_resource(GetDataFromModelbyID, "/GetDataFromModelbyID/<int:Register_id>")
+api.add_resource(GetDataFromSchema, "/GetDataFromSchema/all")
 
 
 if __name__ == '__main__':
