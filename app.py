@@ -294,14 +294,32 @@ class GetDataFromSchemabyID(Resource):
             return "Data Updated"
         except Exception as e:
             df = {
-                "Error" : "Something went Worng in GetDataFromSchemabyID.post",
+                "Error" : "Something went Worng in GetDataFromSchemabyID.put",
                 "Error_Message" : e
             }
             print("Either The Id is invalid or Something went wrong ")
             print("Error :" , e)
             return df    
 
-   
+    
+    def delete(self, Register_id):
+        try:
+            data = register.query.get(Register_id)
+            if data is None:
+                return ("No Data With the given Register_id = {}. Please Enter valid Register_id").format(Register_id)
+            db.session.delete(data)
+            db.session.commit()
+            registers_schema = registerSchema()
+            registers_schema.dumps(data)
+            return "Deleted Successfully."
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromSchemabyID.put",
+                "Error_Message" : e
+            }
+            print("Either The Id is invalid or Something went wrong ")
+            print("Error :" , e)
+            return df   
         
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
