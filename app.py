@@ -275,6 +275,34 @@ class GetDataFromSchemabyID(Resource):
             return df 
         
         
+        
+    def put(self, Register_id):
+        try:
+            data = register.query.get_or_404(Register_id)
+            print("Data",data)
+            print("Type of Data",type(data))
+            if data is None:
+                message = "Data with the given Id does not exist."
+                print(message)
+                return message
+            data.name = request.json['name']
+            data.lname = request.json['lname']
+            db.session.commit()
+            registers_schema = registerSchema()
+            registers_schema.dumps(data)
+            # return redirect("/GetDataFromSchema/all")
+            return "Data Updated"
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromSchemabyID.post",
+                "Error_Message" : e
+            }
+            print("Either The Id is invalid or Something went wrong ")
+            print("Error :" , e)
+            return df    
+
+   
+        
 api.add_resource(HelloWorld,"/")
 api.add_resource(HelloName,"/<string:name>")
 api.add_resource(RegisterList,"/RegisterList")
