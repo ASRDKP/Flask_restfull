@@ -254,6 +254,25 @@ class GetDataFromSchemabyID(Resource):
             print("Error :" , e)
             return df   
            
+    
+    def post(self, Register_id):
+        try:
+            data = register(id = Register_id, name = request.json['name'], lname = request.json['lname'])
+            print("Data :" , data)
+            db.session.add(data)
+            print("$$#%$$#$$")
+            db.session.commit()
+            print("$$#%$$#$$")
+            registers_schema = registerSchema()
+            registers_schema.dumps(data)
+            return redirect("/GetDataFromSchema/all")
+        except Exception as e:
+            df = {
+                "Error" : "Something went Worng in GetDataFromSchemabyID.getbyid",
+                "Error_Message" : e.args[0]
+            }
+            print("Error :" , e.args[0])
+            return df 
         
         
 api.add_resource(HelloWorld,"/")
